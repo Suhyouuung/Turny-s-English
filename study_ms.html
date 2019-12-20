@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Turny English</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Acme|Amatic+SC|Patrick+Hand|Signika|Nanum+Gothic+Coding|Sunflower&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        #turnys-logo {
+            font-family: 'Indie Flower'; 
+            font-size: 20px;
+            opacity: 1.0;
+        }
+        #turnys-logo:hover {
+            color: rgb(255, 162, 49);
+        }
+
+        #turnys-img {
+            vertical-align: middle;
+
+            margin-right: 10px;
+            border-radius: 50%;
+            opacity: 1.0;
+        }
+        
+        #left-side {
+            font-family: 'Indie Flower';
+        }
+
+        #main-content {
+            padding-top : 10px;
+        }
+
+        img {
+            vertical-align: middle;
+            margin-top: 10px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .word-row {
+            margin-left: 5px;
+        }
+
+        .new-card-word {
+            width: 250px;
+            height: 120px;        
+            text-align: center;
+            font-family: 'Patrick Hand';
+            font-size: 20px;
+            border-radius: 10px;
+            background-color: #f5f5dc;
+            margin-bottom: 10px;
+            margin-right: 10px;
+        }
+        .card-word {    
+            width: 250px;
+            height: 120px;        
+            text-align: center;
+            font-family: 'Patrick Hand';
+            font-size: 20px;
+            border-radius: 10px;
+            background-color: #f5f5dc;
+            margin-bottom: 10px;
+            margin-right: -40px;
+        }
+        .card-word:hover {
+            background-color:rgb(245,245,200);
+        }
+
+        .C {
+            width: 5px;
+            height: 10px;
+            border-radius: 100%;
+            border: transparent;
+            position: relative;
+            left: -30px;
+            top: 30px;
+        }
+
+        .C.red {
+            background-color: #ff0000;
+        }
+        .C.yellow {
+            background-color: #ffa500;
+        }
+        .C.green {
+            background-color: #008000;
+        }
+
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+            font-family: 'Amatic SC';
+            font-weight: 900;
+            font-size: 20px;
+        }
+
+        .row.content {
+            height: 1600px;
+            background-color: rgba(255, 162, 49, 0.08);
+        }
+        
+        .sidenav {
+            padding-top: 20px;
+            background-color: #f1f1f1;
+            height: 1600px;
+
+        }
+        
+        footer {
+            background-color: #ffa231;
+            color: white;
+            padding: 10px;
+        }
+        
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+            .row.content {height:auto;} 
+        } 
+    </style>
+</head>
+
+<script>
+    var wordArr = ['abandon', 'abnormal', 'accommodate', 'beggar', 'beat', 'biology', 'comfortable', 'competition', 'compulsory', 'curious', 'deaf', 'debt', 'diligent', 'earthquake', 'elder', 'essential', 'exhibition', 'fare', 'fine', 'gain', 'goods', 'hesitate', 'horizon', 'identify', 'independent', 'instrument'];
+    var defArr = ['버리다', '비정상적인', '수용하다', '거지, 걸인', '이기다, 때리다', '생물학', '안락한, 편안한', '경쟁', '강제적인', '궁금한', '청각장애의', '빚, 은혜', '부지런한', '지진', '연상의', '필수적인', '전시회', '요금', '벌금', '얻다', '상품', '망설이다', '수평선', '구별하다', '독립의', '기구'];
+    var count = 1;
+    var colorArr = ['rgba(245, 245, 220)', 'rgba(255, 0, 0, 0.37)', 'rgba(255, 165, 0, 0.37)', 'rgba(0, 128, 0, 0.37)']; // 기본색, red, yellow, green의 RGB값
+    var original = []; // 색이 설정되지 않은 단어
+    var red = []; // red로 설정된 단어
+    var yellow = []; // yellow로 설정된 단어
+    var green = []; // green으로 설정된 단어
+    var rNum, yNum, gNum; // 각 색별로 설정된 단어의 수
+
+    // <단어 뜻 확인 함수>
+    function showDef(btn) {
+        // 뜻을 확인할 단어의 값을 받아 단어인지 뜻인지 확인
+        var button = document.getElementById(btn);
+        var string = document.getElementById(btn).value;
+        var isWord = (wordArr.indexOf(string) !== -1);
+        var isDef = (defArr.indexOf(string) !== -1);
+
+        // 현재 값이 단어라면 뜻으로, 뜻이라면 단어로
+        if (isWord == 1) {
+            var index = wordArr.indexOf(string);
+            button.value = defArr[index];
+            button.style.fontFamily = 'Nanum Gothic Coding';
+        }
+        else if (isDef == 1) {
+            var index = defArr.indexOf(string);
+            button.value = wordArr[index];
+            button.style.fontFamily = 'Patrick Hand';
+        }
+        
+        // 좌표 확인
+        var curLeft = curTop = 0;
+        if (button.offsetParent) {
+            do {
+                curLeft += button.offsetLeft;
+                curTop += button.offsetTop;
+            } while (button = button.offsetParent);
+        }
+        console.log(curLeft, curTop);
+    }
+
+    // <단어상자 색 설정 함수>
+    function setColor(btn, color) {
+        // 색을 설정할 단어상자를 받고 현재 색 확인
+        var button = document.getElementById(btn);
+        var current = button.style.backgroundColor;
+
+        // 현재 배경색이 기본색이라면 클릭한 버튼의 색으로, 버튼의 색이라면 기본색으로 
+        if (current == colorArr[color]) button.style.backgroundColor = colorArr[0];
+        else button.style.backgroundColor = colorArr[color];
+    }
+
+    // <색 정렬 함수>
+    function resetBtn() {
+        // sidenav의 알파벳 정렬 버튼은 연하게, 색 정렬 버튼은 버튼 진하게 바꿈
+        document.getElementById('abc').style.backgroundColor = 'lightgray';
+        document.getElementById('color').style.backgroundColor = 'gray';
+        
+        // main-content 내용 초기화
+        var items = document.getElementById('main-content');
+        items.innerHTML="";
+        
+        // 색 순으로 정렬(red - yellow - green - original)
+        for (i=0; i<rNum; i++) {
+            var newWord = red[i];
+            var newBtn = document.createElement("button");
+            var newDef = newWord + "\r\n\n" + defArr[wordArr.indexOf(newWord)];
+            var node = document.createTextNode(newDef);
+            newBtn.appendChild(node);
+            newBtn.className = "new-card-word";
+            newBtn.style.backgroundColor = 'rgba(255, 0, 0, 0.37)';
+            newBtn.id = red[i];
+
+            items.appendChild(newBtn);
+        }
+        for (i=0; i<yNum; i++) {
+            var newWord = yellow[i];
+            var newBtn = document.createElement("button");
+            var newDef = newWord + "\n\n" + defArr[wordArr.indexOf(newWord)];
+            var node = document.createTextNode(newDef);
+            newBtn.appendChild(node);
+            newBtn.className = "new-card-word";
+            newBtn.style.backgroundColor = 'rgba(255, 165, 0, 0.37)';
+            newBtn.id = yellow[i];
+
+            items.appendChild(newBtn);
+        }
+        for (i=0; i<gNum; i++) {
+            var newWord = green[i];
+            var newBtn = document.createElement("button");
+            var newDef = newWord + "\n\n" + defArr[wordArr.indexOf(newWord)];
+            var node = document.createTextNode(newDef);
+            newBtn.appendChild(node);
+            newBtn.className = "new-card-word";
+            newBtn.style.backgroundColor = 'rgba(0, 128, 0, 0.37)';
+            newBtn.id = green[i];
+
+            items.appendChild(newBtn);
+        }
+        for (i=0; i<oNum; i++) {
+            var newWord = original[i];
+            var newBtn = document.createElement("button");
+            var newDef = newWord + "\n\n" + defArr[wordArr.indexOf(newWord)];
+            var node = document.createTextNode(newDef);
+            newBtn.appendChild(node);
+            newBtn.className = "new-card-word"; 
+            newBtn.style.backgroundColor = 'rgba(245, 245, 220)';
+            newBtn.id = original[i];
+
+            items.appendChild(newBtn);
+        }
+    }
+    // <색 저장 함수>
+    function saveColor() {
+        oNum = 0;
+        rNum = 0;
+        yNum = 0;
+        gNum = 0;
+        for (i=0; i<26; i++) {
+            // 단어 배열에 있는 단어 순으로 
+            // document로부터 버튼과 배경색을 받음
+            var curWord = wordArr[i];
+            var curBtn = document.getElementById(curWord);
+            var curBtnColor = curBtn.style.backgroundColor;
+            if (curBtnColor == colorArr[1]) {
+                red[rNum] = curWord;
+                rNum++;
+            }
+            else if (curBtnColor == colorArr[2]) {
+                yellow[yNum] = curWord;
+                yNum++;
+            }
+            else if (curBtnColor == colorArr[3]) {
+                green[gNum] = curWord;
+                gNum++;
+            }
+            else {
+                original[oNum] = curWord;
+                oNum++;
+            }
+        }
+    }
+</script>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">   
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>           
+                </button>
+                <a class="navbar-brand" target="_blank" id="turnys-logo" style="color: black;">Turny's</a>
+                <a href="turny_image.jpg" target="_blank">
+                    <img src="turny_image.jpg"  width="30" height="30" id="turnys-img"></a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav mr-auto">
+                    <li><a class="bold" href="index.html"> Home </a></li>
+                    <li><a class="bold" href="howto.html"> How to </a></li>
+                    <li class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Study
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="study_ms.html">Middle School Voca</a><br/>
+                            <a class="dropdown-item" href="study_hs.html">High School Voca</a><br/>
+                            <a class="dropdown-item" href="study_toeic.html">TOEIC Voca</a><br/>
+                            <a class="dropdown-item" href="study_toefl.html">iBT TOEFL Voca</a>
+                        </div>
+                    </li>
+                    <li><a class="bold" href="game_ms.html"> Game! </a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid text-center">    
+        <div class="row content">
+            <div class="col-sm-1 sidenav btn-group-vertical" id="left-side">
+                <button type="button" class="btn btn-outline-danger active" id="abc" style="background-color: gray;" onclick="location.href='study_ms.html'">
+                    A<br/>B<br/>C</button>
+                <button type="button" class="btn btn-outline-danger" id="color" style="background-color: lightgray;" onclick="saveColor(); resetBtn();">
+                    ●<br/>○<br/>●</button>
+            </div>
+
+            <div class="col-sm-11 text-left" id="main-content">
+                <div class="row word-row">
+                    <input onclick="showDef('abandon')" type="button" class="card-word" id="abandon" value="abandon">
+                        <button onclick="setColor('abandon', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('abandon', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('abandon', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('abnormal')" type="button" class="card-word" id="abnormal" value="abnormal">
+                        <button onclick="setColor('abnormal', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('abnormal', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('abnormal', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('accommodate')" type="button" class="card-word" id="accommodate" value="accommodate">
+                        <button onclick="setColor('accommodate', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('accommodate', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('accommodate', 3)" type="button" class="C green"></button>
+                    </input>
+                </div>
+                <div class="row word-row">
+                    <input onclick="showDef('beggar')" type="button" class="card-word" id="beggar" value="beggar">
+                        <button onclick="setColor('beggar', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('beggar', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('beggar', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('beat')" type="button" class="card-word" id="beat" value="beat">
+                        <button onclick="setColor('beat', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('beat', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('beat', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('biology')" type="button" class="card-word" id="biology" value="biology">
+                        <button onclick="setColor('biology', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('biology', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('biology', 3)" type="button" class="C green"></button>
+                    </input>
+                </div>
+                <div class="row word-row">
+                    <input onclick="showDef('comfortable')" type="button" class="card-word" id="comfortable" value="comfortable">
+                        <button onclick="setColor('comfortable', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('comfortable', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('comfortable', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('competition')" type="button" class="card-word" id="competition" value="competition">
+                        <button onclick="setColor('competition', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('competition', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('competition', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('compulsory')" type="button" class="card-word" id="compulsory" value="compulsory">
+                        <button onclick="setColor('compulsory', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('compulsory', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('compulsory', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('curious')" type="button" class="card-word" id="curious" value="curious">
+                        <button onclick="setColor('curious', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('curious', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('curious', 3)" type="button" class="C green"></button>
+                    </input>
+                </div>
+                <div class="row word-row">
+                    <input onclick="showDef('deaf')" type="button" class="card-word" id="deaf" value="deaf">
+                        <button onclick="setColor('deaf', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('deaf', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('deaf', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('debt')" type="button" class="card-word" id="debt" value="debt">
+                        <button onclick="setColor('debt', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('debt', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('debt', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('diligent')" type="button" class="card-word" id="diligent" value="diligent">
+                        <button onclick="setColor('diligent', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('diligent', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('diligent', 3)" type="button" class="C green"></button>
+                    </input>
+                </div>
+                <div class="row word-row">
+                    <input onclick="showDef('earthquake')" type="button" class="card-word" id="earthquake" value="earthquake">
+                        <button onclick="setColor('earthquake', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('earthquake', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('earthquake', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('elder')" type="button" class="card-word" id="elder" value="elder">
+                        <button onclick="setColor('elder', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('elder', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('elder', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('essential')" type="button" class="card-word" id="essential" value="essential">
+                        <button onclick="setColor('essential', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('essential', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('essential', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('exhibition')" type="button" class="card-word" id="exhibition" value="exhibition">
+                        <button onclick="setColor('exhibition', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('exhibition', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('exhibition', 3)" type="button" class="C green"></button>
+                    </input>
+                </div>
+                <div class="row word-row">
+                    <input onclick="showDef('fare')" type="button" class="card-word" id="fare" value="fare">
+                        <button onclick="setColor('fare', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('fare', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('fare', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('fine')" type="button" class="card-word" id="fine" value="fine">
+                        <button onclick="setColor('fine', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('fine', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('fine', 3)" type="button" class="C green"></button>
+                    </input>
+                </div>
+                <div class="row word-row">
+                    <input onclick="showDef('gain')" type="button" class="card-word" id="gain" value="gain">
+                        <button onclick="setColor('gain', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('gain', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('gain', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('goods')" type="button" class="card-word" id="goods" value="goods">
+                        <button onclick="setColor('goods', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('goods', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('goods', 3)" type="button" class="C green"></button>
+                    </input>
+                </div>
+                <div class="row word-row">
+                    <input onclick="showDef('hesitate')" type="button" class="card-word" id="hesitate" value="hesitate">
+                        <button onclick="setColor('hesitate', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('hesitate', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('hesitate', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('horizon')" type="button" class="card-word" id="horizon" value="horizon">
+                        <button onclick="setColor('horizon', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('horizon', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('horizon', 3)" type="button" class="C green"></button>
+                    </input>
+                </div>
+                <div class="row word-row">
+                    <input onclick="showDef('identify')" type="button" class="card-word" id="identify" value="identify">
+                        <button onclick="setColor('identify', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('identify', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('identify', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('independent')" type="button" class="card-word" id="independent" value="independent">
+                        <button onclick="setColor('independent', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('independent', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('independent', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('instrument')" type="button" class="card-word" id="instrument" value="instrument">
+                        <button onclick="setColor('instrument', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('instrument', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('instrument', 3)" type="button" class="C green"></button>
+                    </input>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="container-fluid text-center">
+            <p style="font-family: 'Amatic SC';">made by SUH YOUNG</p>
+        </footer>
+
+</body>
+</html>

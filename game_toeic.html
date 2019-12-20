@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Turny English</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Acme|Amatic+SC|Patrick+Hand|Signika|Nanum+Gothic+Coding&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+    <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+    <style>
+        #turnys-logo {
+            font-family: 'Indie Flower'; 
+            font-size: 20px;
+            opacity: 1.0;
+        }
+        #turnys-logo:hover {
+            color: rgb(255, 162, 49);
+        }
+
+        #turnys-img {
+            vertical-align: middle;
+            margin-top: 10px;
+            margin-right: 10px;
+            border-radius: 50%;
+            opacity: 1.0;
+        }
+
+        #collapseEM {
+            background-color: rgba(20, 188, 255, 0.144); 
+            padding: 20px; 
+            width: 400px; 
+            margin-left: 200px; 
+            border-radius: 10px;
+        }
+
+        #center {
+            height: 700px;
+        }
+        
+        #side {
+            font-family: 'Indie Flower';
+        }
+
+        #logos {
+            opacity: 0.75;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        #logos:hover {
+            opacity: 1.0;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+            font-family: 'Amatic SC';
+            font-weight: 900;
+            font-size: 20px;
+        }
+
+        .row.content {
+            height: 700px;
+            background-color: aliceblue;
+        }
+        
+        .sidenav {
+            padding-top: 20px;
+            background-color: #f1f1f1;
+            height: 700px;
+
+        }
+
+        .category {
+            font-family: 'Amatic SC';
+            font-weight: 700;
+        }
+        
+        footer {
+            background-color: rgb(255, 162, 49);
+            color: white;
+            padding: 10px;
+        }
+        
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+            .row.content {height:auto;} 
+        } 
+    </style>
+
+    <script>
+        var stage;
+        var wordArr = ['abrupt', 'attain', 'casualty', 'conviction', 'deception', 'embed', 'furnish', 'hypothesis', 'indigenous', 'lethal', 'mandatory', 'optimize', 'preserve', 'retrieve', 'simultaneous', 'thoroughly', 'uprising', 'void', 'warrant'];
+        var defArr = ['돌연한', '이루다', '사상자', '유죄 판결', '속임, 기만', '끼워넣다', '제공하다', '가설', '토착의, 원산의', '치명적인', '의무적인', '최적화하다', '보존하다', '회수하다', '동시의', '완전히', '봉기', '공동, 빈 공간', '영장, 보증서'];
+        var curY = -30;
+        function init() {
+            stage = new createjs.Stage("canvas");
+            var numbers = [];
+            randomWord(19, numbers);
+            var box1, word1, wordBox1, dbox1, def1, defbox1;
+            createBox(box1, word1, wordBox1, dbox1, def1, defbox1, numbers[0]);
+            var box2, word2, wordBox2, dbox2, def2, defbox2;
+            createBox(box2, word2, wordBox2, dbox2, def2, defbox2, numbers[1]);
+            var box3, word3, wordBox3, dbox3, def3, defbox3;
+            createBox(box3, word3, wordBox3, dbox3, def3, defbox3, numbers[2]);
+            var box4, word4, wordBox4, dbox4, def4, defbox4;
+            createBox(box4, word4, wordBox4, dbox4, def4, defbox4, numbers[3]);
+            var box5, word5, wordBox5, dbox5, def5, defbox5;
+            createBox(box5, word5, wordBox5, dbox5, def5, defbox5, numbers[4]);
+            var box6, word6, wordBox6, dbox6, def6, defbox6;
+            createBox(box6, word6, wordBox6, dbox6, def6, defbox6, numbers[5]);
+            var box7, word7, wordBox7, dbox7, def7, defbox7;
+            createBox(box7, word7, wordBox7, dbox7, def7, defbox7, numbers[6]);
+
+            stage.update();
+
+            createjs.Ticker.setFPS(60);
+        }
+
+        function randomWord(num, numbers) {
+            var resnum = 0;
+            for (i=0; i<num; i++) {
+                numbers[i] = Math.floor(Math.random()*num);
+                for (j=0; j<i; j++) {
+                    if (numbers[j] == numbers[i]) {
+                        i--;
+                        break;
+                    }
+                }
+            }
+            console.log(numbers);
+        }
+
+        function createBox(nbox, nword, nwordbox, ndbox, ndef, ndefbox, index) {
+            nbox = new createjs.Shape();
+            nbox.graphics.beginFill("salmon").drawRoundRect(0, 0, 150, 50, 10);
+
+            nword = new createjs.Text(wordArr[index], "16px Signika", "#000000");
+            nword.textAlign = "center";
+            nword.textBaseline = "middle";
+            nword.x = 150/2;
+            nword.y = 50/2;
+            
+            nwordbox = new createjs.Container();
+            nwordbox.x = Math.floor(Math.random()*300);
+            nwordbox.y = Math.floor(Math.random()*450);
+            nwordbox.addChild(nbox, nword);
+
+            stage.addChild(nwordbox);
+            //
+            ndbox = new createjs.Shape();
+            ndbox.graphics.beginFill("#FF9900").drawRoundRect(0, 0, 150, 50, 10);
+
+            ndef = new createjs.Text(defArr[index], "14px Nanum Gothic Coding", "#000000");
+            ndef.textAlign = "center";
+            ndef.textBaseline = "middle";
+            ndef.x = 150/2;
+            ndef.y = 50/2;
+            //
+            ndefbox = new createjs.Container();
+            ndefbox.x = 600;
+            curY = curY + 70;
+            ndefbox.y = curY;
+            ndefbox.addChild(ndbox, ndef);
+
+            stage.addChild(ndefbox);
+            //
+            nwordbox.on("mousedown", function(evt) {
+                woffset = {x: nwordbox.x - stage.mouseX, y:nwordbox.y - stage.mouseY};
+            });
+            nwordbox.on("pressmove", function(evt) {
+                nwordbox.x = stage.mouseX+woffset.x;
+                nwordbox.y = stage.mouseY+woffset.y;
+                stage.update();
+            });
+
+            ndefbox.on("mousedown", function(evt) {
+                woffset = {x: ndefbox.x - stage.mouseX, y:ndefbox.y - stage.mouseY};
+            });
+            ndefbox.on("pressmove", function(evt) {
+                ndefbox.x = stage.mouseX+woffset.x;
+                ndefbox.y = stage.mouseY+woffset.y;
+                stage.update();
+            });
+
+            stage.update();
+            
+            createjs.Ticker.setFPS(20);
+            createjs.Ticker.on("tick", function(evt) {
+                var diffX = nwordbox.x - ndefbox.x;
+                var diffY = nwordbox.y - ndefbox.y;
+                var distance = Math.round(Math.sqrt(diffX*diffX+diffY*diffY));
+
+                if (distance < 60) {
+                    ndefbox.alpha = 0.3;
+                    nwordbox.alpha = 0.3;
+                } 
+
+                stage.update();
+            });
+        }
+    </script>
+</head>
+
+
+<body onload="init();">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">   
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>           
+                </button>
+                <a class="navbar-brand" target="_blank" id="turnys-logo" style="color: black;">Turny's</a>
+                <a href="turny_image.jpg" target="_blank">
+                    <img src="turny_image.jpg"  width="30" height="30" id="turnys-img"></a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav mr-auto">
+                    <li><a class="bold" href="index.html"> Home </a></li>
+                    <li><a class="bold" href="howto.html"> How to </a></li>
+                    <li class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Study
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="study_ms.html">Middle School Voca</a><br/>
+                            <a class="dropdown-item" href="study_hs.html">High School Voca</a><br/>
+                            <a class="dropdown-item" href="study_toeic.html">TOEIC Voca</a><br/>
+                            <a class="dropdown-item" href="study_toefl.html">iBT TOEFL Voca</a>
+                        </div>
+                    </li>
+                    <li><a class="bold" href="game_ms.html"> Game! </a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid text-center" id="center">    
+        <div class="row content">
+            <div class="col-sm-1 sidenav btn-group-vertical" id="side">
+                <button type="button" class="btn btn-outline-danger category" id="abc" style="background-color: lightgray;" onclick="location.href='game_ms.html'">
+                    middle<br/>school<br/>voca</button>
+                <button type="button" class="btn btn-outline-danger category" id="color" style="background-color: lightgray;" onclick="location.href='game_hs.html'">
+                    high<br/>school<br/>voca</button>
+                <button type="button" class="btn btn-outline-danger active category" id="color" style="background-color: gray;" onclick="location.href='game_toeic.html'">
+                    TOEIC<br/>voca</button>
+                <button type="button" class="btn btn-outline-danger category" id="color" style="background-color: lightgray;" onclick="location.href='game_toefl.html'">
+                    iBT<br/>TOEFL<br/>voca</button>
+            </div>
+            <div class="col-sm-11 text-left" id="main-content"> 
+                <canvas id="canvas" width="920px" height="700px"></canvas>
+                
+            </div>
+            
+        </div>
+    </div>
+
+    <footer class="container-fluid text-center">
+        <p style="font-family: 'Amatic SC';">made by SUH YOUNG</p>
+    </footer>
+</body>
+</html>

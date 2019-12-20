@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Turny English</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Acme|Amatic+SC|Patrick+Hand|Signika|Nanum+Gothic+Coding|Sunflower&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        #turnys-logo {
+            font-family: 'Indie Flower'; 
+            font-size: 20px;
+            opacity: 1.0;
+        }
+        #turnys-logo:hover {
+            color: rgb(255, 162, 49);
+        }
+
+        #turnys-img {
+            vertical-align: middle;
+
+            margin-right: 10px;
+            border-radius: 50%;
+            opacity: 1.0;
+        }
+        
+        #left-side {
+            font-family: 'Indie Flower';
+        }
+
+        #main-content {
+            padding-top : 10px;
+        }
+
+        img {
+            vertical-align: middle;
+            margin-top: 10px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .word-row {
+            margin-left: 5px;
+        }
+
+        .new-card-word {
+            width: 250px;
+            height: 120px;        
+            text-align: center;
+            font-family: 'Patrick Hand';
+            font-size: 20px;
+            border-radius: 10px;
+            background-color: #f5f5dc;
+            margin-bottom: 10px;
+            margin-right: 10px;
+        }
+        .card-word {    
+            width: 250px;
+            height: 120px;        
+            text-align: center;
+            font-family: 'Patrick Hand';
+            font-size: 20px;
+            border-radius: 10px;
+            background-color: #f5f5dc;
+            margin-bottom: 10px;
+            margin-right: -40px;
+        }
+        .card-word:hover {
+            background-color:rgb(245,245,200);
+        }
+
+        .C {
+            width: 5px;
+            height: 10px;
+            border-radius: 100%;
+            border: transparent;
+            position: relative;
+            left: -30px;
+            top: 30px;
+        }
+
+        .C.red {
+            background-color: #ff0000;
+        }
+        .C.yellow {
+            background-color: #ffa500;
+        }
+        .C.green {
+            background-color: #008000;
+        }
+
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+            font-family: 'Amatic SC';
+            font-weight: 900;
+            font-size: 20px;
+        }
+
+        .row.content {
+            height: 1600px;
+            background-color: rgba(255, 162, 49, 0.08);
+        }
+        
+        .sidenav {
+            padding-top: 20px;
+            background-color: #f1f1f1;
+            height: 1600px;
+
+        }
+        
+        footer {
+            background-color: #ffa231;
+            color: white;
+            padding: 10px;
+        }
+        
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+            .row.content {height:auto;} 
+        } 
+    </style>
+</head>
+
+<script>
+    var wordArr = ['absurd', 'ascribe', 'bewildered', 'coarse', 'diverge', 'edible', 'fluctuate', 'hierarchical', 'homogeneous', 'implicit', 'intimate', 'legacy', 'moderate', 'noticeable', 'obligate', 'persist', 'retain', 'skeptical', 'suspend', 'tame', 'undermine', 'vacant', 'zealous']
+    var defArr = ['터무니없는', '탓으로 돌리다', '당혹한', '거친', '갈라지다', '먹을 수 있는', '오르내리다', '계급의', '동종의', '암시된, 내포된', '친밀한', '유산', '보통의, 적당한', '뚜렷한', '강요하다', '계속하다', '유지하다', '회의적인', '매달다', '길들여진', '약화시키다', '비어있는', '열성적인'];
+    var count = 1;
+    var colorArr = ['rgba(245, 245, 220)', 'rgba(255, 0, 0, 0.37)', 'rgba(255, 165, 0, 0.37)', 'rgba(0, 128, 0, 0.37)'];
+    var original = [];
+    var red = [];
+    var yellow = [];
+    var green = [];
+    var rNum, yNum, gNum;
+
+    function showDef(btn) {
+        var button = document.getElementById(btn);
+        var string = document.getElementById(btn).value;
+        var isWord = (wordArr.indexOf(string) !== -1);
+        var isDef = (defArr.indexOf(string) !== -1);
+        if (isWord == 1) {
+            var index = wordArr.indexOf(string);
+            button.value = defArr[index];
+            button.style.fontFamily = 'Nanum Gothic Coding';
+        }
+        else if (isDef == 1) {
+            var index = defArr.indexOf(string);
+            button.value = wordArr[index];
+            button.style.fontFamily = 'Patrick Hand';
+        }
+        
+        // 좌표 확인
+        var curLeft = curTop = 0;
+        if (button.offsetParent) {
+            do {
+                curLeft += button.offsetLeft;
+                curTop += button.offsetTop;
+            } while (button = button.offsetParent);
+        }
+        console.log(curLeft, curTop);
+    }
+
+    function setColor(btn, color) {
+        var button = document.getElementById(btn);
+        var current = button.style.backgroundColor;
+
+        if (current == colorArr[color]) button.style.backgroundColor = colorArr[0];
+        else button.style.backgroundColor = colorArr[color];
+    }
+
+    function resetBtn() {
+        // sidenav 아래쪽 버튼 진하게 색깔 변경
+        document.getElementById('abc').style.backgroundColor = 'lightgray';
+        document.getElementById('color').style.backgroundColor = 'gray';
+        
+        // main-content 내용 초기화
+        var items = document.getElementById('main-content');
+        items.innerHTML="";
+        
+        // 색깔별로 정렬(red - yellow - green - original)
+        for (i=0; i<rNum; i++) {
+            var newWord = red[i];
+            var newBtn = document.createElement("button");
+            var newDef = newWord + "\r\n\n" + defArr[wordArr.indexOf(newWord)];
+            var node = document.createTextNode(newDef);
+            newBtn.appendChild(node);
+            newBtn.className = "new-card-word";
+            newBtn.style.backgroundColor = 'rgba(255, 0, 0, 0.37)';
+            newBtn.id = red[i];
+
+            items.appendChild(newBtn);
+        }
+        for (i=0; i<yNum; i++) {
+            var newWord = yellow[i];
+            var newBtn = document.createElement("button");
+            var newDef = newWord + "\n\n" + defArr[wordArr.indexOf(newWord)];
+            var node = document.createTextNode(newDef);
+            newBtn.appendChild(node);
+            newBtn.className = "new-card-word";
+            newBtn.style.backgroundColor = 'rgba(255, 165, 0, 0.37)';
+            newBtn.id = yellow[i];
+
+            items.appendChild(newBtn);
+        }
+        for (i=0; i<gNum; i++) {
+            var newWord = green[i];
+            var newBtn = document.createElement("button");
+            var newDef = newWord + "\n\n" + defArr[wordArr.indexOf(newWord)];
+            var node = document.createTextNode(newDef);
+            newBtn.appendChild(node);
+            newBtn.className = "new-card-word";
+            newBtn.style.backgroundColor = 'rgba(0, 128, 0, 0.37)';
+            newBtn.id = green[i];
+
+            items.appendChild(newBtn);
+        }
+        for (i=0; i<oNum; i++) {
+            var newWord = original[i];
+            var newBtn = document.createElement("button");
+            var newDef = newWord + "\n\n" + defArr[wordArr.indexOf(newWord)];
+            var node = document.createTextNode(newDef);
+            newBtn.appendChild(node);
+            newBtn.className = "new-card-word"; 
+            newBtn.style.backgroundColor = 'rgba(245, 245, 220)';
+            newBtn.id = original[i];
+
+            items.appendChild(newBtn);
+        }
+    }
+
+    function saveColor() {
+        // 색깔별로 정리
+        oNum = 0;
+        rNum = 0;
+        yNum = 0;
+        gNum = 0;
+        for (i=0; i<23; i++) {
+            var curWord = wordArr[i];
+            var curBtn = document.getElementById(curWord);
+            var curBtnColor = curBtn.style.backgroundColor;
+            if (curBtnColor == colorArr[1]) {
+                red[rNum] = curWord;
+                rNum++;
+            }
+            else if (curBtnColor == colorArr[2]) {
+                yellow[yNum] = curWord;
+                yNum++;
+            }
+            else if (curBtnColor == colorArr[3]) {
+                green[gNum] = curWord;
+                gNum++;
+            }
+            else {
+                original[oNum] = curWord;
+                oNum++;
+            }
+        }
+        console.log(rNum, yNum, gNum, oNum);
+    }
+</script>
+
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">   
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>           
+                </button>
+                <a class="navbar-brand" target="_blank" id="turnys-logo" style="color: black;">Turny's</a>
+                <a href="turny_image.jpg" target="_blank">
+                    <img src="turny_image.jpg"  width="30" height="30" id="turnys-img"></a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav mr-auto">
+                    <li><a class="bold" href="index.html"> Home </a></li>
+                    <li><a class="bold" href="howto.html"> How to </a></li>
+                    <li class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Study
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="study_ms.html">Middle School Voca</a><br/>
+                            <a class="dropdown-item" href="study_hs.html">High School Voca</a><br/>
+                            <a class="dropdown-item" href="#">TOEIC Voca</a><br/>
+                            <a class="dropdown-item" href="#">iBT TOEFL Voca</a>
+                        </div>
+                    </li>
+                    <li><a class="bold" href="game_ms.html"> Game! </a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid text-center">    
+        <div class="row content">
+            <div class="col-sm-1 sidenav btn-group-vertical" id="left-side">
+                <button type="button" class="btn btn-outline-danger active" id="abc" style="background-color: gray;" onclick="location.href='study_toefl.html'">
+                    A<br/>B<br/>C</button>
+                <button type="button" class="btn btn-outline-danger" id="color" style="background-color: lightgray;" onclick="saveColor(); resetBtn();">
+                    ●<br/>○<br/>●</button>
+            </div>
+
+            <div class="col-sm-11 text-left" id="main-content">
+                <div class="row word-row">
+                    <input onclick="showDef('absurd')" type="button" class="card-word" id="absurd" value="absurd">
+                        <button onclick="setColor('absurd', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('absurd', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('absurd', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('ascribe')" type="button" class="card-word" id="ascribe" value="ascribe">
+                        <button onclick="setColor('ascribe', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('ascribe', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('ascribe', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('bewildered')" type="button" class="card-word" id="bewildered" value="bewildered">
+                        <button onclick="setColor('bewildered', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('bewildered', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('bewildered', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('coarse')" type="button" class="card-word" id="coarse" value="coarse">
+                        <button onclick="setColor('coarse', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('coarse', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('coarse', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('diverge')" type="button" class="card-word" id="diverge" value="diverge">
+                        <button onclick="setColor('diverge', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('diverge', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('diverge', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('edible')" type="button" class="card-word" id="edible" value="edible">
+                        <button onclick="setColor('edible', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('edible', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('edible', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('fluctuate')" type="button" class="card-word" id="fluctuate" value="fluctuate">
+                        <button onclick="setColor('fluctuate', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('fluctuate', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('fluctuate', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('hierarchical')" type="button" class="card-word" id="hierarchical" value="hierarchical">
+                        <button onclick="setColor('hierarchical', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('hierarchical', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('hierarchical', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('homogeneous')" type="button" class="card-word" id="homogeneous" value="homogeneous">
+                        <button onclick="setColor('homogeneous', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('homogeneous', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('homogeneous', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('implicit')" type="button" class="card-word" id="implicit" value="implicit">
+                        <button onclick="setColor('implicit', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('implicit', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('implicit', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('intimate')" type="button" class="card-word" id="intimate" value="intimate">
+                        <button onclick="setColor('intimate', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('intimate', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('intimate', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('legacy')" type="button" class="card-word" id="legacy" value="legacy">
+                        <button onclick="setColor('legacy', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('legacy', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('legacy', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('moderate')" type="button" class="card-word" id="moderate" value="moderate">
+                        <button onclick="setColor('moderate', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('moderate', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('moderate', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('noticeable')" type="button" class="card-word" id="noticeable" value="noticeable">
+                        <button onclick="setColor('noticeable', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('noticeable', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('noticeable', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('obligate')" type="button" class="card-word" id="obligate" value="obligate">
+                        <button onclick="setColor('obligate', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('obligate', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('obligate', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('persist')" type="button" class="card-word" id="persist" value="persist">
+                        <button onclick="setColor('persist', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('persist', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('persist', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('retain')" type="button" class="card-word" id="retain" value="retain">
+                        <button onclick="setColor('retain', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('retain', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('retain', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('skeptical')" type="button" class="card-word" id="skeptical" value="skeptical">
+                        <button onclick="setColor('skeptical', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('skeptical', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('skeptical', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('suspend')" type="button" class="card-word" id="suspend" value="suspend">
+                        <button onclick="setColor('suspend', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('suspend', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('suspend', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('tame')" type="button" class="card-word" id="tame" value="tame">
+                        <button onclick="setColor('tame', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('tame', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('tame', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('undermine')" type="button" class="card-word" id="undermine" value="undermine">
+                        <button onclick="setColor('undermine', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('undermine', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('undermine', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('vacant')" type="button" class="card-word" id="vacant" value="vacant">
+                        <button onclick="setColor('vacant', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('vacant', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('vacant', 3)" type="button" class="C green"></button>
+                    </input>
+                    <input onclick="showDef('zealous')" type="button" class="card-word" id="zealous" value="zealous">
+                        <button onclick="setColor('zealous', 1)" type="button" class="C red"></button>
+                        <button onclick="setColor('zealous', 2)" type="button" class="C yellow"></button>
+                        <button onclick="setColor('zealous', 3)" type="button" class="C green"></button>
+                    </input>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="container-fluid text-center">
+            <p style="font-family: 'Amatic SC';">made by SUH YOUNG</p>
+        </footer>
+
+</body>
+</html>

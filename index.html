@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Turny English</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Acme|Amatic+SC|Patrick+Hand|Signika&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        #turnys-logo {
+            font-family: 'Indie Flower'; 
+            font-size: 20px;
+            opacity: 1.0;
+        }
+        #turnys-logo:hover {
+            color: rgb(255, 162, 49);
+        }
+
+        #turnys-img {
+            vertical-align: middle;
+            margin-top: 10px;
+            margin-right: 10px;
+            border-radius: 50%;
+            opacity: 1.0;
+        }
+
+        #turny-swf {
+            margin: 0px;
+            margin-left: 10px;
+            height: 450px;
+            width: 799px;
+        }
+        
+        #left-side {
+            font-family: 'Indie Flower';
+        }
+
+        #main-content {
+            margin: 0px;
+        }
+
+        img {
+            vertical-align: middle;
+            margin-top: 10px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+            font-family: 'Amatic SC';
+            font-weight: 900;
+            font-size: 20px;
+        }
+
+        .row.content {
+            height: 450px;
+            background-color: #FFD29C;
+        }
+        
+        footer {
+            background-color: rgb(255, 162, 49);
+            color: white;
+            padding: 10px;
+            margin-top: -5.5px;
+        }
+        
+        @media screen and (max-width: 767px) {
+            .row.content {height:auto;} 
+        } 
+    </style>
+</head>
+
+
+<body>    
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">   
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>           
+                </button>
+                <a class="navbar-brand" target="_blank" id="turnys-logo" style="color: black;">Turny's</a>
+                <a href="turny_image.jpg" target="_blank">
+                    <img src="turny_image.jpg"  width="30" height="30" id="turnys-img"></a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav mr-auto">
+                    <li><a class="bold" href="index.html"> Home </a></li>
+                    <li><a class="bold" href="howto.html"> How to </a></li>
+                    <li class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Study
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="study_ms.html">Middle School Voca</a><br/>
+                            <a class="dropdown-item" href="study_hs.html">High School Voca</a><br/>
+                            <a class="dropdown-item" href="study_toeic.html">TOEIC Voca</a><br/>
+                            <a class="dropdown-item" href="study_toefl.html">iBT TOEFL Voca</a>
+                        </div>
+                    </li>
+                    <li><a class="bold" href="game_ms.html"> Game! </a></li>
+                </ul>
+            </div>
+        </div> 
+    </nav>
+
+    <div class="container-fluid text-center">    
+        <div class="row content">
+            <div class="col-sm-12 text-left" id="main-content"> 
+                <object type="application/x-shockwave-flash" data="turny.swf" id="turny-swf">
+                    <param name="movie" value="turny.swf"/></object>
+            </div>
+        </div>
+    </div>
+
+    <footer class="container-fluid text-center">
+        <p style="font-family: 'Amatic SC';">made by SUH YOUNG</p>
+    </footer>
+</body>
+</html>
